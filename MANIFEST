@@ -6,3 +6,7 @@ t/00_load.t
 t/01_mediamosa.t
 t/02_importer.t
 README
+Makefile.PL
+LICENSE
+META.yml
+META.json

@@ -4,6 +4,8 @@ use Catmandu::Sane;
 use Catmandu::MediaMosa;
 use Moo;
 
+our $VERSION = '0.272';
+
 with 'Catmandu::Importer';
 
 has base_url  => (is => 'ro' , required => 1);
@@ -33,7 +35,9 @@ sub generator {
             $offset += $count ;
         }
         
-        return shift @{$res};
+        my $asset = shift @{$res};
+        
+        $self->mm->asset($asset)->items->first
     }
 }
 
