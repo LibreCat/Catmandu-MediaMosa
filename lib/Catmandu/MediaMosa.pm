@@ -344,12 +344,22 @@ sub collection_asset_list {
     $self->_make_items(Catmandu::MediaMosa::Items::asset_list->parse_xpath($xpath))
   );
 }
-#sub collection_create {
-#    my($self,$params) = @_;
-#    $params ||= {};
-#    $self->vp_request("/collection/create",$params,"POST");
-#}
-#
+#<items>
+#  <item id="1">
+#    <coll_id>3</coll_id>
+#  </item>
+#</items>
+sub collection_create {
+  my($self,$params) = @_;
+  $params ||= {};
+  my $res = $self->vp_request("/collection/create",$params,"POST");
+  my $xpath = xpath($res->content_ref);
+  $self->_make_response(
+    $self->_parse_header($xpath),
+    $self->_make_items(Catmandu::MediaMosa::Items::simple_list->parse_xpath($xpath,1))
+  );
+}
+
 ##trancode
 #sub transcode_profile_list {
 #    my($self,$params) = @_;
@@ -362,12 +372,23 @@ sub collection_asset_list {
 #    $self->vp_request("/preview_profile_id",$params,"GET");
 #}
 #
-##mediafile
-#sub mediafile_create {
-#    my($self,$params) = @_;
-#    $params ||= {};
-#    $self->vp_request("/mediafile/create",$params,"POST");
-#}
+#mediafile_create:
+#
+#<items>
+#  <item id="1">
+#    <mediafile_id>ERTpgSptYbqvUaYUJGrryyML</mediafile_id>
+#  </item>
+#</items>
+sub mediafile_create {
+  my($self,$params) = @_;
+  $params ||= {};
+  my $res = $self->vp_request("/mediafile/create",$params,"POST");
+  my $xpath = xpath($res->content_ref);
+  $self->_make_response(
+    $self->_parse_header($xpath),
+    $self->_make_items(Catmandu::MediaMosa::Items::simple_list->parse_xpath($xpath,1))
+  );
+}
 sub mediafile {
   my($self,$params) = @_;
   $params ||= {};
@@ -378,11 +399,12 @@ sub mediafile {
     $self->_make_items(Catmandu::MediaMosa::Items::mediafile->parse_xpath($xpath))
   );
 }
-#sub mediafile_update {
-#    my($self,$params) = @_;
-#    $params ||= {};
-#    $self->vp_request("/mediafile/$params->{mediafile_id}",$params,"POST");
-#}
+#media_update: rest api does not return response
+sub mediafile_update {
+  my($self,$params) = @_;
+  $params ||= {};
+  $self->vp_request("/mediafile/$params->{mediafile_id}",$params,"POST");
+}
 #sub mediafile_upload_ticket_create {
 #    my($self,$params) = @_;
 #    $params ||= {};
