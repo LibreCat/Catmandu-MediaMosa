@@ -20,15 +20,15 @@ sub parse {
 sub parse_xpath {
   my($class,$xpath) = @_;
   __PACKAGE__->new(
-    item_count => $xpath->findvalue("/response/header/item_count")->value(),
-    item_count_total => $xpath->findvalue("/response/header/item_count_total")->value(),
-    item_offset => $xpath->findvalue("/response/header/item_offset")->value(),
-    request_process_time => $xpath->findvalue("/response/header/request_process_time")->value(),
-    request_result => $xpath->findvalue("/response/header/request_result")->value(),
-    request_result_description => $xpath->findvalue("/response/header/request_result_description")->value(),
-    request_result_id => $xpath->findvalue("/response/header/request_result_id")->value(),
-    request_uri => $xpath->findvalue("/response/header/request_uri")->value(),
-    vpx_version => $xpath->findvalue("/response/header/vpx_version")->value()
+    item_count => $xpath->findvalue("/response/header/item_count"),
+    item_count_total => $xpath->findvalue("/response/header/item_count_total"),
+    item_offset => $xpath->findvalue("/response/header/item_offset"),
+    request_process_time => $xpath->findvalue("/response/header/request_process_time"),
+    request_result => $xpath->findvalue("/response/header/request_result"),
+    request_result_description => $xpath->findvalue("/response/header/request_result_description"),
+    request_result_id => $xpath->findvalue("/response/header/request_result_id"),
+    request_uri => $xpath->findvalue("/response/header/request_uri"),
+    vpx_version => $xpath->findvalue("/response/header/vpx_version")
   );
 
 }

@@ -16,8 +16,8 @@ sub parse_xpath {
   for my $i($xpath->find('/response/items/item')->get_nodelist()){
     my $item = {};
     for my $child($i->find('child::*')->get_nodelist()){
-      my $name = $child->getName();
-      my $value = $child->string_value();
+      my $name = $child->nodeName();
+      my $value = $child->nodeValue();
 
       if(array_includes([qw(dublin_core qualified_dublin_core czp)],$name)){
 
@@ -29,10 +29,10 @@ sub parse_xpath {
           my $mediafile = {};
 
           for my $mfchild($mf->find("child::*")->get_nodelist()){
-            if($mfchild->getName() eq "metadata"){
+            if($mfchild->nodeName() eq "metadata"){
               $mediafile->{"metadata"} = get_children($mfchild,1);
             }else{
-              $mediafile->{ $mfchild->getName() } = $mfchild->string_value();
+              $mediafile->{ $mfchild->nodeName() } = $mfchild->nodeValue();
             }
           }
 

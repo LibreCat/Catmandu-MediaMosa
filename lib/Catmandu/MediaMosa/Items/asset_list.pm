@@ -16,8 +16,8 @@ sub parse_xpath {
   for my $i($xpath->find('/response/items/item')->get_nodelist()){
     my $item = {};
     for my $child($i->find('child::*')->get_nodelist()){
-      my $name = $child->getName();
-      my $value = $child->string_value();
+      my $name = $child->nodeName();
+      my $value = $child->nodeValue();
 
       if(array_includes([qw(dublin_core qualified_dublin_core)],$name)){
         $item->{$name} = get_children($child);

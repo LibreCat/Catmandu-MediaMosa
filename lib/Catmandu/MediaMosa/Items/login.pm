@@ -12,7 +12,7 @@ sub parse {
 sub parse_xpath {
   my($class,$xpath) = @_;
   [{
-    dbus => $xpath->findvalue("/response/items/item/dbus")->value(),
+    dbus => $xpath->findvalue("/response/items/item/dbus"),
   }];
 }
 

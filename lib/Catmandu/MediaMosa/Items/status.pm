@@ -16,8 +16,8 @@ sub parse_xpath {
   for my $i($xpath->find('/response/items/item')->get_nodelist()){
     my $item = {};
     for my $child($i->find('child::*')->get_nodelist()){
-      my $name = $child->getName();
-      my $value = $child->string_value();
+      my $name = $child->nodeName();
+      my $value = $child->nodeValue();
 
       if($name eq "time"){
 
@@ -27,7 +27,7 @@ sub parse_xpath {
 
         $item->{$name} = {};
         for my $c($child->find('child::*')->get_nodelist()){
-          $item->{$name}->{ $c->getName() } = get_children($c,1);
+          $item->{$name}->{ $c->nodeName() } = get_children($c,1);
         }
 
       }    

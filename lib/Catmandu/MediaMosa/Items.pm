@@ -4,4 +4,4 @@ use Moo::Role;
 
 requires qw(parse parse_xpath);
 
-__PACKAGE__;
+1;
