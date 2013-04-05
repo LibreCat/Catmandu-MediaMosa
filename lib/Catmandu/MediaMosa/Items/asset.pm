@@ -17,7 +17,7 @@ sub parse_xpath {
     my $item = {};
     for my $child($i->find('child::*')->get_nodelist()){
       my $name = $child->nodeName();
-      my $value = $child->nodeValue();
+      my $value = $child->textContent();
 
       if(array_includes([qw(dublin_core qualified_dublin_core czp)],$name)){
 
@@ -32,7 +32,7 @@ sub parse_xpath {
             if($mfchild->nodeName() eq "metadata"){
               $mediafile->{"metadata"} = get_children($mfchild,1);
             }else{
-              $mediafile->{ $mfchild->nodeName() } = $mfchild->nodeValue();
+              $mediafile->{ $mfchild->nodeName() } = $mfchild->textContent();
             }
           }
 

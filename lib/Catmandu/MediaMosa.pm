@@ -98,7 +98,7 @@ sub _construct_query {
   for my $key(keys %$data){
     if(is_array_ref($data->{$key})){
       for my $val(@{ $data->{$key} }){
-        push @parts,URI::Escape::uri_escape($key)."=".URI::Escape::uri_escape($val);
+        push @parts,URI::Escape::uri_escape($key)."[]=".URI::Escape::uri_escape($val);
       }
     }else{
       push @parts,URI::Escape::uri_escape($key)."=".URI::Escape::uri_escape($data->{$key});

@@ -15,7 +15,7 @@ sub get_children {
   if($xpath){
     for my $child($xpath->find('child::*')->get_nodelist()){
       my $name = $child->nodeName();
-      my $value = $child->nodeValue();
+      my $value = $child->textContent();
       if($is_hash){
         $hash->{ $name } = $value;
       }else{
