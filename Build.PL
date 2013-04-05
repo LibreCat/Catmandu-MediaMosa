@@ -26,7 +26,8 @@ my $builder = Module::Build->new(
     'Digest::SHA1' => 0,
     'URI::Escape' => 0,
     'XML::LibXML' => 0,
-    'XML::LibXML::XPathContext' => 0
+    'XML::LibXML::XPathContext' => 0,
+    all => 0
   },
   add_to_cleanup => [qw(
     Catmandu-MediaMosa-*
