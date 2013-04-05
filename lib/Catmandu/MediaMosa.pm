@@ -20,16 +20,16 @@ our $VERSION = "0.1";
 #zie http://www.mediamosa.org/sites/default/files/Webservices-MediaMosa-1.5.3.pdf
 
 has base_url => (
-    is => 'ro',
-    required => 1
+  is => 'ro',
+  required => 1
 );
 has user => (
-    is => 'ro',
-    required => 1
+  is => 'ro',
+  required => 1
 );
 has password => (
-    is => 'ro',
-    required => 1
+  is => 'ro',
+  required => 1
 );
 
 sub _parse_header {
@@ -144,7 +144,7 @@ sub _authenticate {
 
     my $response_string = sha1_hex("$challenge_server:$random:".$self->password);
     my $res = $self->_vp_request("/login",{
-        dbus => "DATA $random $response_string"
+      dbus => "DATA $random $response_string"
     },"POST");
 
     my $items = Catmandu::MediaMosa::Items::login->parse($res->content_ref);
@@ -276,6 +276,13 @@ sub asset_collection_list {
     $self->_make_items(Catmandu::MediaMosa::Items::simple_list->parse_xpath($xpath,1))
   );
 }
+#asset_metadata_update: returns posted metadata
+#
+#<items>
+#  <item id="1">
+#    <description>test description</description>
+#  </item>
+#</items>
 sub asset_metadata_update {
   my($self,$params) = @_;
   $params ||= {};
@@ -313,7 +320,17 @@ sub job_delete {
   $params ||= {};
   $self->vp_request("/job/$params->{job_id}/delete",$params,"POST");
 }
-##collections
+sub job_failures {
+  my($self,$params) = @_;
+  $params ||= {};
+  my $res = $self->vp_request("/job/failures",$params,"GET");
+  my $xpath = xpath($res->content_ref);
+  $self->_make_response(
+    $self->_parse_header($xpath),
+    $self->_make_items(Catmandu::MediaMosa::Items::simple_list->parse_xpath($xpath,1))
+  );
+}
+#collections
 sub collection_list {
   my($self,$params) = @_;
   $params ||= {};
@@ -361,17 +378,66 @@ sub collection_create {
 }
 
 ##trancode
-#sub transcode_profile_list {
-#    my($self,$params) = @_;
-#    $params ||= {};
-#    $self->vp_request("/transcode/profiles",$params,"GET");
-#}
-#sub preview_profile_id {
-#    my($self,$params) = @_;
-#    $params ||= {};
-#    $self->vp_request("/preview_profile_id",$params,"GET");
-#}
+sub transcode_profile_list {
+  my($self,$params) = @_;
+  $params ||= {};
+  my $res = $self->vp_request("/transcode/profile",$params,"GET");
+  my $xpath = xpath($res->content_ref);
+  $self->_make_response(
+    $self->_parse_header($xpath),
+    $self->_make_items(Catmandu::MediaMosa::Items::simple_list->parse_xpath($xpath,1))
+  );
+}
+sub transcode_profile {
+  my($self,$params) = @_;
+  $params ||= {};
+  my $res = $self->vp_request("/transcode/profile/$params->{profile_id}",$params,"GET");
+  my $xpath = xpath($res->content_ref);
+  $self->_make_response(
+    $self->_parse_header($xpath),
+    $self->_make_items(Catmandu::MediaMosa::Items::simple_list->parse_xpath($xpath,1))
+  );
+}
+#transcode_profile_update:
 #
+#<items>
+#  <item id="1">
+#    <profile_id>1</profile_id>
+#  </item>
+#</items>
+sub transcode_profile_update {
+  my($self,$params) = @_;
+  $params ||= {};
+  my $res = $self->vp_request("/transcode/profile/$params->{profile_id}",$params,"POST");
+  my $xpath = xpath($res->content_ref);
+  $self->_make_response(
+    $self->_parse_header($xpath),
+    $self->_make_items(Catmandu::MediaMosa::Items::simple_list->parse_xpath($xpath,1))
+  );
+}
+#transcode_profile_create
+#
+#<items>
+#  <item id="1">
+#    <profile_id>11</profile_id>
+#  </item>
+#</items>
+sub transcode_profile_create {
+  my($self,$params) = @_;
+  $params ||= {};
+  my $res = $self->vp_request("/transcode/profile/create",$params,"POST");
+  my $xpath = xpath($res->content_ref);
+  $self->_make_response(
+    $self->_parse_header($xpath),
+    $self->_make_items(Catmandu::MediaMosa::Items::simple_list->parse_xpath($xpath,1))
+  );
+}
+#transcode_profile_delete: rest api does not return response
+sub transcode_profile_delete {
+  my($self,$params) = @_;
+  $params ||= {};
+  $self->vp_request("/transcode/profile/$params->{profile_id}/delete",$params,"POST");
+}
 #mediafile_create:
 #
 #<items>
@@ -405,18 +471,37 @@ sub mediafile_update {
   $params ||= {};
   $self->vp_request("/mediafile/$params->{mediafile_id}",$params,"POST");
 }
-#sub mediafile_upload_ticket_create {
-#    my($self,$params) = @_;
-#    $params ||= {};
-#    $self->vp_request("/mediafile/$params->{mediafile_id}/uploadticket/create",$params,"POST");
-#}
-#sub mediafile_transcode {
-#    my($self,$params) = @_;
-#    $params ||= {};
-#    $self->vp_request("/mediafile/$params->{mediafile_id}/transcode",$params,"POST");
-#}
-#
-##user
+sub mediafile_upload_ticket_create {
+  my($self,$params) = @_;
+  $params ||= {};
+  my $res = $self->vp_request("/mediafile/$params->{mediafile_id}/uploadticket/create",$params,"POST");
+  my $xpath = xpath($res->content_ref);
+  $self->_make_response(
+    $self->_parse_header($xpath),
+    $self->_make_items(Catmandu::MediaMosa::Items::simple_list->parse_xpath($xpath,1))
+  );
+}
+#user
+sub user_list {
+  my($self,$params) = @_;
+  $params ||= {};
+  my $res = $self->vp_request("/user",$params,"GET");
+  my $xpath = xpath($res->content_ref);
+  $self->_make_response(
+    $self->_parse_header($xpath),
+    $self->_make_items(Catmandu::MediaMosa::Items::simple_list->parse_xpath($xpath,1))
+  );
+}
+sub user_detail {
+  my($self,$params) = @_;
+  $params ||= {};
+  my $res = $self->vp_request("/user/$params->{user_id}",$params,"GET");
+  my $xpath = xpath($res->content_ref);
+  $self->_make_response(
+    $self->_parse_header($xpath),
+    $self->_make_items(Catmandu::MediaMosa::Items::simple_list->parse_xpath($xpath,1))
+  );
+}
 sub user_job_list {
   my($self,$params) = @_;
   $params ||= {};
@@ -427,11 +512,69 @@ sub user_job_list {
     $self->_make_items(Catmandu::MediaMosa::Items::simple_list->parse_xpath($xpath,1))
   );
 }
-
-
+sub error_code_list {
+  my($self,$params) = @_;
+  $params ||= {};
+  my $res = $self->vp_request("/errorcodes",$params,"GET");
+  my $xpath = xpath($res->content_ref);
+  $self->_make_response(
+    $self->_parse_header($xpath),
+    $self->_make_items(Catmandu::MediaMosa::Items::simple_list->parse_xpath($xpath,1))
+  );
+}
+sub error_code {
+  my($self,$params) = @_;
+  $params ||= {};
+  my $res = $self->vp_request("/errorcodes/$params->{code}",$params,"GET");
+  my $xpath = xpath($res->content_ref);
+  $self->_make_response(
+    $self->_parse_header($xpath),
+    $self->_make_items(Catmandu::MediaMosa::Items::simple_list->parse_xpath($xpath,1))
+  );
+}
+sub version {
+  my($self,$params) = @_;
+  $params ||= {};
+  my $res = $self->vp_request("/version",$params,"GET");
+  my $xpath = xpath($res->content_ref);
+  $self->_make_response(
+    $self->_parse_header($xpath),
+    $self->_make_items(Catmandu::MediaMosa::Items::simple_list->parse_xpath($xpath,1))
+  );
+}
+sub acl_app {
+  my($self,$params) = @_;
+  $params ||= {};
+  my $res = $self->vp_request("/acl/app",$params,"GET");
+  my $xpath = xpath($res->content_ref);
+  $self->_make_response(
+    $self->_parse_header($xpath),
+    $self->_make_items(Catmandu::MediaMosa::Items::simple_list->parse_xpath($xpath,1))
+  );
+}
+sub app_quota {
+  my($self,$params) = @_;
+  $params ||= {};
+  my $res = $self->vp_request("/app/quota",$params,"GET");
+  my $xpath = xpath($res->content_ref);
+  $self->_make_response(
+    $self->_parse_header($xpath),
+    $self->_make_items(Catmandu::MediaMosa::Items::simple_list->parse_xpath($xpath,1))
+  );
+}
+sub status {
+  my($self,$params) = @_;
+  $params ||= {};
+  my $res = $self->vp_request("/status",$params,"GET");
+  my $xpath = xpath($res->content_ref);
+  $self->_make_response(
+    $self->_parse_header($xpath),
+    $self->_make_items(Catmandu::MediaMosa::Items::status->parse_xpath($xpath))
+  );
+}
 =head1 NAME
     
-MediaMosa - Low level Perl conncector for the MediaMosa REST API
+MediaMosa - Low level Perl connector for the MediaMosa REST API
 
 =head1 SYNOPSIS
 
