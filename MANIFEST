@@ -21,3 +21,5 @@ t/00_load.t
 t/01_mediamosa.t
 t/02_importer.t
 t/parse.pl
+META.yml
+META.json
