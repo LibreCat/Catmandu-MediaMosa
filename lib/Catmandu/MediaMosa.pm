@@ -70,7 +70,7 @@ sub _vp_request {
     confess "method $method not supported";
   }
   $self->_validate_web_response($res);
-
+  print $res->content;
   $res;
 }
 sub _construct_params_as_array {
@@ -187,7 +187,12 @@ sub asset_create {
 sub asset_delete {
   my($self,$params) = @_;
   $params ||= {};
-  $self->vp_request("/asset/$params->{asset_id}/delete",$params,"POST");
+  my $res = $self->vp_request("/asset/$params->{asset_id}/delete",$params,"POST");
+  my $xpath = xpath($res->content_ref);
+  $self->_make_response(
+    $self->_parse_header($xpath),
+    $self->_make_items(Catmandu::MediaMosa::Items::simple_list->parse_xpath($xpath,1))
+  );
 }
 sub asset_list {
   my($self,$params) = @_;
@@ -214,7 +219,13 @@ sub asset {
 sub asset_update {
   my($self,$params) = @_;
   $params ||= {};
-  $self->vp_request("/asset/$params->{asset_id}",$params,"POST");
+  my $res = $self->vp_request("/asset/$params->{asset_id}",$params,"POST");
+
+  my $xpath = xpath($res->content_ref);
+  $self->_make_response(
+    $self->_parse_header($xpath),
+    $self->_make_items(Catmandu::MediaMosa::Items::simple_list->parse_xpath($xpath,1))
+  );
 }
 sub asset_play {
   my($self,$params) = @_;
@@ -436,7 +447,12 @@ sub transcode_profile_create {
 sub transcode_profile_delete {
   my($self,$params) = @_;
   $params ||= {};
-  $self->vp_request("/transcode/profile/$params->{profile_id}/delete",$params,"POST");
+  my $res = $self->vp_request("/transcode/profile/$params->{profile_id}/delete",$params,"POST");
+  my $xpath = xpath($res->content_ref);
+  $self->_make_response(
+    $self->_parse_header($xpath),
+    $self->_make_items(Catmandu::MediaMosa::Items::simple_list->parse_xpath($xpath,1))
+  );
 }
 #mediafile_create:
 #
@@ -469,7 +485,12 @@ sub mediafile {
 sub mediafile_update {
   my($self,$params) = @_;
   $params ||= {};
-  $self->vp_request("/mediafile/$params->{mediafile_id}",$params,"POST");
+  my $res = $self->vp_request("/mediafile/$params->{mediafile_id}",$params,"POST");
+  my $xpath = xpath($res->content_ref);
+  $self->_make_response(
+    $self->_parse_header($xpath),
+    $self->_make_items(Catmandu::MediaMosa::Items::simple_list->parse_xpath($xpath,1))
+  );
 }
 sub mediafile_upload_ticket_create {
   my($self,$params) = @_;
@@ -505,7 +526,7 @@ sub user_detail {
 sub user_job_list {
   my($self,$params) = @_;
   $params ||= {};
-  my $res = $self->vp_request("/user/$params->{owner_id}/joblist",$params,"GET");
+  my $res = $self->vp_request("/user/$params->{user_id}/joblist",$params,"GET");
   my $xpath = xpath($res->content_ref);
   $self->_make_response(
     $self->_parse_header($xpath),
